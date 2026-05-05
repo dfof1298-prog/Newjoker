@@ -166,13 +166,14 @@ def start(message):
         add_user_to_list(user_id, username, message.from_user.first_name)
 
         keyboard = types.InlineKeyboardMarkup()
-        add_bot_button = types.InlineKeyboardButton(text="𝐀𝐝𝐝 𝐭𝐡𝐞 𝐛𝐨𝐭 𝐭𝐨 𝐲𝐨𝐮𝐫 𝐜𝐨𝐥𝐥𝐞𝐜𝐭𝐢𝐨𝐧", url="https://t.me/medo1_0bot?startgroup")
+        add_bot_button = types.InlineKeyboardButton(text="𝐀𝐝𝐝 𝐭𝐡𝐞 𝐛𝐨𝐭 𝐭𝐨 𝐲𝐨𝐮𝐫 𝐜𝐨𝐥𝐥𝐞𝐜𝐭𝐢𝐨𝐧", url="https://t.me/Joker73336?startgroup")
         cmds_button = types.InlineKeyboardButton(text="𝐂𝐨𝐦𝐦𝐚𝐧𝐝𝐬", callback_data="menu")
         cmutton = types.InlineKeyboardButton(text="𝐁𝐔𝐘", callback_data="Buy")        
         keyboard.row(add_bot_button,cmutton)
         keyboard.row(cmds_button)
 
-        video_url = 'https://t.me/M07_3MED/3'
+        # الفيديو الجديد
+        video_url = 'https://t.me/Joker73336/6'
         bot.send_video(
             chat_id=message.chat.id,
             video=video_url,
@@ -904,7 +905,7 @@ def menu_callback(call):
                     mes = types.InlineKeyboardMarkup(row_width=1)
                     mes.add(
                         types.InlineKeyboardButton(f"• {cc[:20]}... •", callback_data='u8'),
-                        types.InlineKeyboardButton(f"• 𝐒𝐓𝐀𝐓𝐔𝐒 ➜ {last[:35]} •", callback_data='u8'),  # تم التوسيع لـ 35 حرف
+                        types.InlineKeyboardButton(f"• 𝐒𝐓𝐀𝐓𝐔𝐒 ➜ {last[:35]} •", callback_data='u8'),
                         types.InlineKeyboardButton(f"• 𝐀𝐩𝐩𝐫𝐨𝐯𝐞𝐝 𝐂𝐡𝐚𝐫𝐠𝐞 ✅ ➜ [ {ch} ] •", callback_data='x'),
                         types.InlineKeyboardButton(f"• 𝐀𝐩𝐩𝐫𝐨𝐯𝐞𝐝 ✅ ➜ [ {app} ] •", callback_data='x'),
                         types.InlineKeyboardButton(f"• 𝐎𝐓𝐏 ☑️ ➜ [ {op} ] •", callback_data='x'),
@@ -941,26 +942,19 @@ def menu_callback(call):
 - - - - - - - - - - - - - - - - - - - - - - - -
 [⌤] 𝐃𝐞𝐯 𝐛𝐲: 𝐉𝐨𝐤𝐞𝐫 🃏'''
                     
-                    if 'Charge !' in last: 
+                    # التعديلات الجديدة للتصنيف الصحيح
+                    if 'Charged' in last or 'Charge' in last: 
                         ch += 1
                         msg = f"<b>𝐀𝐩𝐩𝐫𝐨𝐯𝐞𝐝 𝐂𝐡𝐚𝐫𝐠𝐞 ✅</b>\n{base_msg}"
                         bot.send_message(call.from_user.id, msg, parse_mode='HTML')
-                    
-                    if 'Insufficient Funds' in last: 
-                        app += 1
-                        msg = f"<b>𝐀𝐩𝐩𝐫𝐨𝐯𝐞𝐝 ✅</b>\n{base_msg}"
+                    elif 'Insufficient' in last or 'INSUFFICIENT' in last or 'insufficient' in last: 
+                        live += 1
+                        msg = f"<b>𝐢𝐧𝐬𝐮𝐟𝐟𝐢𝐜𝐢𝐞𝐧𝐭 𝐅𝐮𝐧𝐝𝐬 ☑️</b>\n{base_msg}"
                         bot.send_message(call.from_user.id, msg, parse_mode='HTML')
-                        
-                    elif 'CVV2_FAILURE' in last: 
+                    elif 'CVV' in last or 'CCN' in last or 'security code' in last.lower(): 
                         ccnn += 1
                         msgc = f"<b>𝐀𝐩𝐩𝐫𝐨𝐯𝐞𝐝(CCN) ☑️</b>\n{base_msg}"
                         bot.send_message(call.from_user.id, msgc, parse_mode='HTML')
-                        
-                    elif 'INSUFFICIENT_FUNDS!' in last:
-                        live += 1
-                        msgq = f"<b>𝐢𝐧𝐬𝐮𝐟𝐟𝐢𝐜𝐢𝐞𝐧𝐭 𝐅𝐮𝐧𝐝𝐬 ☑️</b>\n{base_msg}"
-                        bot.send_message(call.from_user.id, msgq, parse_mode='HTML')
-                        
                     elif 'DECLINED_PLEASE_RETRY_LATER' in last: 
                         op += 1                       
                     else:
@@ -1104,13 +1098,14 @@ Card: XXXXXXXXXXXXXXXX|MM|YYYY|CVV</b>''',parse_mode="HTML")
   - - - - - - - - - - - - -
 [⌤] 𝐃𝐞𝐯 𝐛𝐲: 𝐉𝐨𝐤𝐞𝐫 🃏'''
     
-    if "Charge !" in last:
+    # التعديلات الجديدة للتصنيف الصحيح
+    if "Charged" in last or "Charge" in last:
         msg = f"<b>𝐀𝐩𝐩𝐫𝐨𝐯𝐞𝐝 𝐂𝐡𝐚𝐫𝐠𝐞 ✅</b>{base_msg}"
         bot.edit_message_text(chat_id=message.chat.id, message_id=ko, text=msg, parse_mode="HTML")
-    elif "CVV2_FAILURE" in last:
+    elif "CVV" in last or "CCN" in last or "security code" in last.lower():
         msg = f"<b>𝐀𝐩𝐩𝐫𝐨𝐯𝐞𝐝(CCN) ☑️</b>{base_msg}"
         bot.edit_message_text(chat_id=message.chat.id, message_id=ko, text=msg, parse_mode="HTML")
-    elif "Insufficient Funds" in last:
+    elif "Insufficient" in last or "INSUFFICIENT" in last or "insufficient" in last:
         msg = f"<b>𝐢𝐧𝐬𝐮𝐟𝐟𝐢𝐜𝐢𝐞𝐧𝐭 𝐅𝐮𝐧𝐝𝐬 ☑️</b>{base_msg}"
         bot.edit_message_text(chat_id=message.chat.id, message_id=ko, text=msg, parse_mode="HTML")
     else:
