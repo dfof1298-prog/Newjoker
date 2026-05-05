@@ -7,3 +7,4 @@ Flask
 faker
 bs4
 user_agent
+socks
