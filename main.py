@@ -21,6 +21,11 @@ from datetime import datetime, timedelta
 import json
 from multiprocessing import Process
 import threading
+
+# قاموس لتتبع الفحوصات النشطة لكل مستخدم
+# structure: {user_id: {"active": True, "stop_requested": False, "thread": thread}}
+active_scans = {}
+
 stopuser = {}
 token = '8732070263:AAHwNJj0plhZpVuYBNZV5T4RZvQ-2USBWNk'
 bot=telebot.TeleBot(token,parse_mode="HTML")
@@ -79,6 +84,23 @@ def set_user_checks(user_id, amount):
     user_id_str = str(user_id)
     user_check_counts[user_id_str] = amount
     return True
+
+# دالة للتحقق من وجود فحص نشط لمستخدم
+def has_active_scan(user_id):
+    return user_id in active_scans and active_scans[user_id].get("active", False)
+
+# دالة لإيقاف فحص مستخدم
+def stop_user_scan(user_id):
+    if user_id in active_scans:
+        active_scans[user_id]["stop_requested"] = True
+        return True
+    return False
+
+# دالة لإزالة فحص مستخدم بعد الانتهاء
+def remove_active_scan(user_id):
+    if user_id in active_scans:
+        active_scans[user_id]["active"] = False
+        del active_scans[user_id]
 
 # ملفات الحظر والمستخدمين
 BANNED_USERS_FILE = "banned_users.json"
@@ -707,23 +729,28 @@ def check_status(message):
 # ==================== معالجة الملفات ====================
 
 @bot.message_handler(content_types=["document"])
-def main(message):
+def handle_document(message):
+    user_id = message.from_user.id
     name = message.from_user.first_name
     
     # التحقق من الحظر
-    if is_user_banned(message.from_user.id):
+    if is_user_banned(user_id):
         bot.reply_to(message, "🚫 **لقد تم حظرك من استخدام هذا البوت.**\nللتواصل مع المالك: @Joker")
+        return
+    
+    # ✅ منع رفع ملفين في نفس الوقت - الثغرة اللي قلقت منها
+    if has_active_scan(user_id):
+        bot.reply_to(message, "⚠️ **يوجد فحص نشط بالفعل!**\n❌ لا يمكنك رفع ملف جديد حتى ينتهي الفحص الحالي.\n━━━━━━━━━━━━━━━━━━\n🛑 استخدم زر STOP لإيقاف الفحص الحالي")
         return
     
     with open('data.json', 'r') as file:
         json_data = json.load(file)
-    id = message.from_user.id
     
     # التحقق من الاشتراك
-    is_vip, vip_msg = is_vip_active(id)
+    is_vip, vip_msg = is_vip_active(user_id)
     
     try:
-        BL = (json_data[str(id)]['plan']) if str(id) in json_data else '𝗙𝗥𝗘𝗘'
+        BL = (json_data[str(user_id)]['plan']) if str(user_id) in json_data else '𝗙𝗥𝗘𝗘'
     except:
         BL = '𝗙𝗥𝗘𝗘'
     
@@ -731,7 +758,7 @@ def main(message):
         with open('data.json', 'r') as json_file:
             existing_data = json.load(json_file)
         new_data = {
-            id: {
+            user_id: {
                 "plan": "𝗙𝗥𝗘𝗘",
                 "timer": "none",
             }
@@ -759,8 +786,8 @@ def main(message):
             return
     
     # التحقق من عدد الفحوصات للمستخدم العادي
-    if not is_vip and id != admin:
-        current_checks = user_check_counts.get(str(id), 0)
+    if not is_vip and user_id != admin:
+        current_checks = user_check_counts.get(str(user_id), 0)
         if current_checks + line_count > MAX_CHECKS_FREE:
             remaining = MAX_CHECKS_FREE - current_checks
             bot.reply_to(
@@ -776,7 +803,7 @@ def main(message):
     # التحقق من صلاحية الوقت للاشتراك القديم
     if not is_vip:
         try:
-            date_str = json_data[str(id)]['timer'].split('.')[0]
+            date_str = json_data[str(user_id)]['timer'].split('.')[0]
             provided_time = datetime.strptime(date_str, "%Y-%m-%d %H:%M")
         except:
             keyboard = types.InlineKeyboardMarkup()
@@ -792,15 +819,15 @@ def main(message):
             keyboard.add(ahmed)
             bot.send_message(chat_id=message.chat.id, text=f'''<b>𝐘𝐨𝐮 𝐜𝐚𝐧'𝐭 𝐮𝐬𝐞 𝐭𝐡𝐞 𝐛𝐨𝐭 𝐛𝐞𝐜𝐚𝐮𝐬𝐞 𝐲𝐨𝐮𝐫 𝐬𝐮𝐛𝐬𝐜𝐫𝐢𝐩𝐭𝐢𝐨𝐧 𝐡𝐚𝐬 𝐞𝐱𝐩𝐢𝐫𝐞𝐝 ❌</b>\n🛒 استخدم /buy للاشتراك''', reply_markup=keyboard)
             with open('data.json', 'w') as file:
-                json_data[str(id)]['timer'] = 'none'
-                json_data[str(id)]['plan'] = '𝗙𝗥𝗘𝗘'
+                json_data[str(user_id)]['timer'] = 'none'
+                json_data[str(user_id)]['plan'] = '𝗙𝗥𝗘𝗘'
                 json.dump(json_data, file, indent=2)
             return
     
     # تحديث عدد فحوصات المستخدم
-    if not is_vip and id != admin:
-        update_user_check_count(id)
-        update_user_in_list(id, user_check_counts.get(str(id), 0))
+    if not is_vip and user_id != admin:
+        update_user_check_count(user_id)
+        update_user_in_list(user_id, user_check_counts.get(str(user_id), 0))
     
     keyboard = types.InlineKeyboardMarkup()
     akk = types.InlineKeyboardButton(text=f"STRIP CHARGE 5$", callback_data='nmi')
@@ -809,18 +836,22 @@ def main(message):
     keyboard.add(akk)
     keyboard.add(auth)
     keyboard.add(pay)
-    bot.reply_to(message, text=f'𝐂𝐡𝐨𝐨𝐬𝐞 𝐓𝐡𝐞 𝐆𝐚𝐭𝐞𝐰𝐚𝐲 𝐘𝐨𝐮 𝐖𝐚𝐧𝐧𝐚 𝐔𝐬𝐞\n\n👤 {name}\n📊 فحوصات متبقية: {get_remaining_checks(id)}', reply_markup=keyboard)
+    bot.reply_to(message, text=f'𝐂𝐡𝐨𝐨𝐬𝐞 𝐓𝐡𝐞 𝐆𝐚𝐭𝐞𝐰𝐚𝐲 𝐘𝐨𝐮 𝐖𝐚𝐧𝐧𝐚 𝐔𝐬𝐞\n\n👤 {name}\n📊 فحوصات متبقية: {get_remaining_checks(user_id)}', reply_markup=keyboard)
 
 # ==================== أوامر الفحص ====================
 
 @bot.callback_query_handler(func=lambda call: call.data == 'ppp')
 def menu_callback(call):
     def my_function():
-        id = call.from_user.id
+        user_id = call.from_user.id
+        
+        # ✅ تسجيل بداية الفحص في القاموس
+        active_scans[user_id] = {"active": True, "stop_requested": False}
         
         # التحقق من الحظر
-        if is_user_banned(id):
+        if is_user_banned(user_id):
             bot.edit_message_text("🚫 **لقد تم حظرك!**", chat_id=call.message.chat.id, message_id=call.message.message_id)
+            remove_active_scan(user_id)
             return
         
         user = call.from_user.username
@@ -846,19 +877,15 @@ def menu_callback(call):
                 lino = file.readlines()
                 total = len(lino)
                 
-                try:
-                    stopuser[f'{id}']['status'] = 'start'
-                except:
-                    stopuser[f'{id}'] = {'status': 'start'}
-                
                 for index, cc in enumerate(lino):
-                    if stopuser[f'{id}']['status'] == 'stop':
+                    # ✅ التحقق من طلب الإيقاف أو إلغاء الفحص
+                    if not active_scans.get(user_id, {}).get("active", False) or active_scans.get(user_id, {}).get("stop_requested", False):
                         bot.edit_message_text(
                             chat_id=call.message.chat.id,
                             message_id=call.message.message_id,
-                            text="𝐒𝐓𝐎𝐏𝐏𝐄𝐃 ✅"
+                            text="🛑 **تم إيقاف الفحص بناءً على طلبك** 🛑"
                         )
-                        return
+                        break
                     
                     cc = cc.strip()
                     data = {}
@@ -914,7 +941,7 @@ def menu_callback(call):
                         types.InlineKeyboardButton(f"• 𝐃𝐄𝐂𝐋𝐈𝐍𝐄𝐃 ❌ ➜ [ {dd} ] •", callback_data='x'),
                         types.InlineKeyboardButton(f"• 𝐓𝐎𝐓𝐀𝐋 👻 ➜ [ {total} ] •", callback_data='x'),
                         types.InlineKeyboardButton(f"• {index+1}/{total} •", callback_data='x'),
-                        types.InlineKeyboardButton(f"[ 𝐒𝐓𝐎𝐏 ]", callback_data='stop')
+                        types.InlineKeyboardButton(f"[ 𝐒𝐓𝐎𝐏 ]", callback_data=f'stop_scan_{user_id}')
                     )
                     
                     end_time = time.time()
@@ -967,14 +994,38 @@ def menu_callback(call):
         except Exception as e:
             print(f"Error in main loop: {e}")
         
-        stopuser[f'{id}']['status'] = 'start'
+        # ✅ إنهاء الفحص وإزالته من القائمة النشطة
+        remove_active_scan(user_id)
+        
         bot.edit_message_text(
             chat_id=call.message.chat.id,
             message_id=call.message.message_id,
-            text='𝐁𝐄𝐄𝐍 𝐂𝐎𝐌𝐏𝐋𝐄𝐓𝐄𝐃 ✅')
+            text='✅ 𝐒𝐂𝐀𝐍 𝐂𝐎𝐌𝐏𝐋𝐄𝐓𝐄𝐃 ✅')
     
     my_thread = threading.Thread(target=my_function)
     my_thread.start()
+
+# معالج زر الإيقاف
+@bot.callback_query_handler(func=lambda call: call.data.startswith('stop_scan_'))
+def stop_scan(call):
+    user_id = call.from_user.id
+    # استخراج ID المستخدم من الـ callback data
+    target_id = int(call.data.split('_')[2])
+    
+    if user_id != target_id:
+        bot.answer_callback_query(call.id, "❌ هذا الزر ليس مخصص لك!")
+        return
+    
+    if user_id in active_scans:
+        active_scans[user_id]["stop_requested"] = True
+        bot.answer_callback_query(call.id, "🛑 جاري إيقاف الفحص...")
+        bot.edit_message_text(
+            chat_id=call.message.chat.id,
+            message_id=call.message.message_id,
+            text="🛑 **تم طلب إيقاف الفحص، جاري الإيقاف...** 🛑"
+        )
+    else:
+        bot.answer_callback_query(call.id, "❌ لا يوجد فحص نشط للإيقاف")
 
 # أمر الفحص الفردي
 @bot.message_handler(func=lambda message: message.text.lower().startswith('.pp') or message.text.lower().startswith('/pp'))
