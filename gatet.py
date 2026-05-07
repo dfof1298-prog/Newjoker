@@ -261,8 +261,8 @@ import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # ==================== إعدادات الموقع (عدل هنا بس) ====================
-SITE_URL = 'https://friendsoftogo.org/donations/health-for-children-in-africa-program/'  # الرابط الرئيسي
-URL_AJAX = 'https://friendsoftogo.org/wp-admin/admin-ajax.php'  # رابط الـ ajax
+SITE_URL = 'https://www.theflorentine.net/support-the-florentine/'  # الرابط الرئيسي
+URL_AJAX = 'https://www.theflorentine.net/wp-admin/admin-ajax.php'  # رابط الـ ajax
 # ================================================================
 
 # ✅ User-Agent بيتغير مع كل طلب
