@@ -22,8 +22,8 @@ import json
 from multiprocessing import Process
 import threading
 
-# قاموس لتتبع الفحوصات النشطة لكل مستخدم
-# structure: {user_id: {"active": True, "stop_requested": False, "thread": thread}}
+# ==================== قاموس الفحوصات النشطة ====================
+# user_id: {"active": True, "stop_requested": False, "gateway": gateway_name}
 active_scans = {}
 
 stopuser = {}
@@ -738,9 +738,9 @@ def handle_document(message):
         bot.reply_to(message, "🚫 **لقد تم حظرك من استخدام هذا البوت.**\nللتواصل مع المالك: @Joker")
         return
     
-    # ✅ منع رفع ملفين في نفس الوقت - الثغرة اللي قلقت منها
+    # ✅ منع رفع ملف أو بدء فحص جديد في وجود فحص نشط
     if has_active_scan(user_id):
-        bot.reply_to(message, "⚠️ **يوجد فحص نشط بالفعل!**\n❌ لا يمكنك رفع ملف جديد حتى ينتهي الفحص الحالي.\n━━━━━━━━━━━━━━━━━━\n🛑 استخدم زر STOP لإيقاف الفحص الحالي")
+        bot.reply_to(message, "⚠️ **يوجد فحص نشط بالفعل!**\n❌ لا يمكنك بدء فحص جديد حتى ينتهي الفحص الحالي.\n━━━━━━━━━━━━━━━━━━\n🛑 استخدم زر STOP لإيقاف الفحص الحالي")
         return
     
     with open('data.json', 'r') as file:
@@ -845,8 +845,18 @@ def menu_callback(call):
     def my_function():
         user_id = call.from_user.id
         
+        # ✅ التحقق: مفيش فحص نشط من الأساس
+        if has_active_scan(user_id):
+            bot.answer_callback_query(call.id, "⚠️ يوجد فحص نشط بالفعل!")
+            bot.edit_message_text(
+                chat_id=call.message.chat.id,
+                message_id=call.message.message_id,
+                text="⚠️ **لا يمكنك بدء فحص جديد!**\n📌 يوجد فحص نشط بالفعل.\n🛑 استخدم زر STOP أولاً."
+            )
+            return
+        
         # ✅ تسجيل بداية الفحص في القاموس
-        active_scans[user_id] = {"active": True, "stop_requested": False}
+        active_scans[user_id] = {"active": True, "stop_requested": False, "gateway": "paypal"}
         
         # التحقق من الحظر
         if is_user_banned(user_id):
