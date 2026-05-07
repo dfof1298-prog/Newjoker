@@ -262,8 +262,8 @@ import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # ==================== إعدادات الموقع (عدل هنا بس) ====================
-SITE_URL = 'https://fightagainstpovertyassociation.com/donations/school-fees/'  # الرابط الرئيسي
-URL_AJAX = 'https://fightagainstpovertyassociation.com/wp-admin/admin-ajax.php'  # رابط الـ ajax
+SITE_URL = 'https://www.dogsblog.com/donate/'  # الرابط الرئيسي
+URL_AJAX = 'https://www.dogsblog.com/wp-admin/admin-ajax.php'  # رابط الـ ajax
 # ================================================================
 
 UA = 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36'
