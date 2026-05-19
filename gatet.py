@@ -268,8 +268,8 @@ def brn6(ccx):
 
 
 # ==================== إعدادات الموقع الجديد (Oking Foundation) ====================
-SITE_URL = 'https://friendsoftogo.org/donations/health-for-children-in-africa-program/'
-URL_AJAX = 'https://friendsoftogo.org/wp-admin/admin-ajax.php'
+SITE_URL = 'https://www.dogsblog.com/donate/'
+URL_AJAX = 'https://www.dogsblog.com/wp-admin/admin-ajax.php'
 
 def extract_data():
     s = requests.Session()
